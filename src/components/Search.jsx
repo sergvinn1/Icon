@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Container, TextField, Button, Grid, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { collection, getDocs, query, where } from 'firebase/firestore';
@@ -33,26 +33,31 @@ const Search = () => {
 
   return (
     <Container>
-      <Box sx={{ display: 'flex', gap: 2, marginBottom: 3, justifyContent: 'center' }}>
-        <TextField
-          label="Назва ікони"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <TextField
-          label="Номер ікони"
-          value={number}
-          onChange={(e) => setNumber(e.target.value)}
-        />
-        <TextField
-          label="Номер шафи"
-          value={cabinet}
-          onChange={(e) => setCabinet(e.target.value)}
-        />
-        <Button variant="contained" color="primary" onClick={handleSearch}>
-          Пошук
-        </Button>
-        <Button variant="outlined" color="secondary" onClick={() => navigate('/')}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, marginBottom: 3, alignItems: 'center' }}>
+        <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2, width: '100%' }}>
+          <TextField
+            label="Назва ікони"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            fullWidth
+          />
+          <TextField
+            label="Номер ікони"
+            value={number}
+            onChange={(e) => setNumber(e.target.value)}
+            fullWidth
+          />
+          <TextField
+            label="Номер шафи"
+            value={cabinet}
+            onChange={(e) => setCabinet(e.target.value)}
+            fullWidth
+          />
+          <Button variant="contained" color="primary" onClick={handleSearch} fullWidth>
+            Пошук
+          </Button>
+        </Box>
+        <Button variant="outlined" color="secondary" onClick={() => navigate('/')} fullWidth>
           Повернутися
         </Button>
       </Box>

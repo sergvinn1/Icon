@@ -59,33 +59,41 @@ const Home = () => {
       >
         Пошук ікон
       </Typography>
-      <Box sx={{ display: 'flex', gap: 2, marginBottom: 3, justifyContent: 'center' }}>
-        <Button
-          variant="contained"
-          color="primary"
-          startIcon={<SearchIcon />}
-          onClick={() => navigate('/search')}
-        >
-          Пошук іконок
-        </Button>
-        <Button
-          variant="contained"
-          color="secondary"
-          startIcon={<AddIcon />}
-          onClick={() => navigate('/add-icon')}
-        >
-          Додати ікону
-        </Button>
-        <Button
-          variant="contained"
-          color="default"
-          onClick={handleToggleAll}
-        >
-          {allCollapsed ? 'Розгорнути всі' : 'Згорнути всі'}
-        </Button>
-        <FormControl sx={{ minWidth: 120 }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, marginBottom: 3 }}>
+        <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2, justifyContent: 'center', width: '100%' }}>
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<SearchIcon />}
+            onClick={() => navigate('/search')}
+            fullWidth={true}
+            sx={{ maxWidth: { sm: 'auto' } }}
+          >
+            Пошук іконок
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            startIcon={<AddIcon />}
+            onClick={() => navigate('/add-icon')}
+            fullWidth={true}
+            sx={{ maxWidth: { sm: 'auto' } }}
+          >
+            Додати ікону
+          </Button>
+          <Button
+            variant="contained"
+            color="default"
+            onClick={handleToggleAll}
+            fullWidth={true}
+            sx={{ maxWidth: { sm: 'auto' } }}
+          >
+            {allCollapsed ? 'Розгорнути всі' : 'Згорнути всі'}
+          </Button>
+        </Box>
+        <FormControl sx={{ minWidth: 120, width: '100%', maxWidth: { sm: 'auto' } }}>
           <InputLabel>Сортувати за</InputLabel>
-          <Select value={sortType} onChange={handleSortChange}>
+          <Select value={sortType} onChange={handleSortChange} fullWidth={true}>
             <MenuItem value="name">Назвою</MenuItem>
             <MenuItem value="number">Номером ікони</MenuItem>
             <MenuItem value="cabinet">Шафою</MenuItem>
