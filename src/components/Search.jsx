@@ -3,7 +3,7 @@ import { Container, TextField, Button, Grid, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
-import IconCard from '../components/IconCard';
+import IconCard from './IconCard';
 
 const Search = () => {
   const [name, setName] = useState('');
@@ -13,17 +13,21 @@ const Search = () => {
   const navigate = useNavigate();
 
   const handleSearch = async () => {
+    if (name.length < 3 && number.length < 3 && cabinet.length < 3) {
+      return;
+    }
+
     const iconsCollection = collection(db, 'icons');
     let q = query(iconsCollection);
 
-    if (name) {
-      q = query(q, where('name', '==', name));
+    if (name.length >= 3) {
+      q = query(q, where('name', '>=', name), where('name', '<=', name + '\uf8ff'));
     }
-    if (number) {
-      q = query(q, where('number', '==', number));
+    if (number.length >= 3) {
+      q = query(q, where('number', '>=', number), where('number', '<=', number + '\uf8ff'));
     }
-    if (cabinet) {
-      q = query(q, where('cabinet', '==', cabinet));
+    if (cabinet.length >= 3) {
+      q = query(q, where('cabinet', '>=', cabinet), where('cabinet', '<=', cabinet + '\uf8ff'));
     }
 
     const iconSnapshot = await getDocs(q);
@@ -65,7 +69,15 @@ const Search = () => {
         {results.map((icon) => (
           <Grid item xs={12} sm={6} md={4} key={icon.id}>
             <Box sx={{ height: '100%' }}>
-              <IconCard {...icon} />
+              <IconCard 
+                id={icon.id}
+                name={icon.name}
+                number={icon.number}
+                cabinet={icon.cabinet}
+                expanded={true} // Відображаємо повну картку при пошуку
+                onEdit={() => {}}
+                onDelete={() => {}}
+              />
             </Box>
           </Grid>
         ))}

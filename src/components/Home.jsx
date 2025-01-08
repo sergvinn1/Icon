@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Button, Container, Typography, Box, Grid, Collapse, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
+import { Button, Container, Typography, Box, Grid, Collapse, MenuItem, Select, FormControl, InputLabel, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
-import IconCard from '../components/IconCard';
-import { ToastContainer } from 'react-toastify';
+import IconCard from './IconCard';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Home = () => {
@@ -14,6 +14,8 @@ const Home = () => {
   const [icons, setIcons] = useState([]);
   const [allCollapsed, setAllCollapsed] = useState(false);
   const [sortType, setSortType] = useState('name');
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [currentIcon, setCurrentIcon] = useState({ id: '', name: '', number: '', cabinet: '' });
 
   useEffect(() => {
     const fetchIcons = async () => {
@@ -40,6 +42,44 @@ const Home = () => {
       if (a[type] > b[type]) return 1;
       return 0;
     });
+  };
+
+  const handleEdit = (icon) => {
+    setCurrentIcon(icon);
+    setIsEditDialogOpen(true);
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteDoc(doc(db, 'icons', id));
+      setIcons(icons.filter(icon => icon.id !== id));
+      toast.success('Ікону видалено успішно');
+    } catch (error) {
+      toast.error('Помилка при видаленні ікони');
+    }
+  };
+
+  const handleEditChange = (e) => {
+    const { name, value } = e.target;
+    setCurrentIcon(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
+
+  const handleEditSubmit = async () => {
+    try {
+      await updateDoc(doc(db, 'icons', currentIcon.id), currentIcon);
+      setIcons(icons.map(icon => (icon.id === currentIcon.id ? currentIcon : icon)));
+      toast.success('Ікону оновлено успішно');
+      setIsEditDialogOpen(false);
+    } catch (error) {
+      toast.error('Помилка при оновленні ікони');
+    }
+  };
+
+  const handleEditDialogClose = () => {
+    setIsEditDialogOpen(false);
   };
 
   return (
@@ -91,7 +131,7 @@ const Home = () => {
             {allCollapsed ? 'Розгорнути всі' : 'Згорнути всі'}
           </Button>
         </Box>
-        <FormControl sx={{ minWidth: 120, width: '100%', maxWidth: { sm: 'auto' } }}>
+        <FormControl fullWidth variant="filled">
           <InputLabel>Сортувати за</InputLabel>
           <Select value={sortType} onChange={handleSortChange} fullWidth={true}>
             <MenuItem value="name">Назвою</MenuItem>
@@ -105,12 +145,59 @@ const Home = () => {
           {sortIcons(icons, sortType).map((icon) => (
             <Grid item xs={12} sm={6} md={4} key={icon.id}>
               <Box sx={{ height: '100%' }}>
-                <IconCard {...icon} expanded={!allCollapsed} />
+                <IconCard 
+                  id={icon.id}
+                  name={icon.name}
+                  number={icon.number}
+                  cabinet={icon.cabinet}
+                  onEdit={() => handleEdit(icon)}
+                  onDelete={() => handleDelete(icon.id)}
+                  expanded={!allCollapsed} 
+                />
               </Box>
             </Grid>
           ))}
         </Grid>
       </Collapse>
+      <Dialog open={isEditDialogOpen} onClose={handleEditDialogClose} maxWidth="sm" fullWidth>
+        <DialogTitle>Редагувати ікону</DialogTitle>
+        <DialogContent dividers>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <TextField
+              label="Назва ікони"
+              name="name"
+              value={currentIcon.name}
+              onChange={handleEditChange}
+              fullWidth
+              required
+            />
+            <TextField
+              label="Номер ікони"
+              name="number"
+              value={currentIcon.number}
+              onChange={handleEditChange}
+              fullWidth
+              required
+            />
+            <TextField
+              label="Номер шафи"
+              name="cabinet"
+              value={currentIcon.cabinet}
+              onChange={handleEditChange}
+              fullWidth
+              required
+            />
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleEditDialogClose} color="secondary">
+            Скасувати
+          </Button>
+          <Button onClick={handleEditSubmit} color="primary">
+            Зберегти
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };
