@@ -1,0 +1,45 @@
+html, body, #root {
+    height: 100%;
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+  }
+  
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+  
+  .card {
+    width: 100%;
+    max-width: 345px;
+    margin: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  @media (max-width: 600px) {
+    .card {
+      max-width: 100%;
+      margin: 8px;
+    }
+  }
+
+  .react-confirm-alert-overlay {
+    background: rgba(0, 0, 0, 0.5);
+  }
+  
+  .react-confirm-alert {
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .react-confirm-alert-button-group button {
+    margin: 0 10px;
+    padding: 10px 20px;
+    border-radius: 4px;
+  }

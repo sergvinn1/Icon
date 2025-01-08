@@ -1,21 +1,25 @@
 import React, { useState } from 'react';
-import { TextField, Button, Container, Typography, Box } from '@mui/material';
+import { TextField, Button, Container, Typography, Box, CircularProgress } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import { db } from '../firebaseConfig';
 import { collection, addDoc } from 'firebase/firestore';
-import { useStore } from '../store'; // Імпорт з іменованого експорту
+import { toast } from 'react-toastify';
 
 const AddIcon = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
   const [cabinet, setCabinet] = useState('');
   const [info, setInfo] = useState('');
-  const user = useStore((state) => state.user);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleAddIcon = async () => {
-    if (!user) {
-      alert('Ви повинні бути зареєстровані для додавання іконок.');
+    if (!name || !number || !cabinet) {
+      toast.error('Будь ласка, заповніть обов\'язкові поля.');
       return;
     }
+
+    setLoading(true);
 
     try {
       await addDoc(collection(db, 'icons'), {
@@ -23,16 +27,18 @@ const AddIcon = () => {
         number,
         cabinet,
         info,
-        userId: user.uid,
       });
       setName('');
       setNumber('');
       setCabinet('');
       setInfo('');
-      alert('Ікону додано успішно!');
+      toast.success('Ікону додано успішно!');
+      navigate('/');
     } catch (error) {
       console.error('Помилка при додаванні ікони: ', error);
-      alert('Сталася помилка при додаванні ікони.');
+      toast.error('Сталася помилка при додаванні ікони.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -66,8 +72,11 @@ const AddIcon = () => {
           value={info}
           onChange={(e) => setInfo(e.target.value)}
         />
-        <Button variant="contained" color="primary" onClick={handleAddIcon}>
-          Додати ікону
+        <Button variant="contained" color="primary" onClick={handleAddIcon} disabled={loading}>
+          {loading ? <CircularProgress size={24} /> : 'Додати ікону'}
+        </Button>
+        <Button variant="outlined" color="secondary" onClick={() => navigate('/')}>
+          Повернутися
         </Button>
       </Box>
     </Container>
