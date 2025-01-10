@@ -6,17 +6,17 @@ import DeleteIcon from '@mui/icons-material/Delete';
 const IconCard = ({ id, name, number, cabinet, onEdit, onDelete }) => {
   return (
     <Card 
-  sx={{ 
-    boxShadow: 3, 
-    '&:hover': { boxShadow: 6 },
-    transition: 'box-shadow 0.3s ease-in-out',
-    height: '100%',
-    width: '100%', // Адаптивна ширина
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between'
-  }}
->
+      sx={{ 
+        boxShadow: 3, 
+        '&:hover': { boxShadow: 6 },
+        transition: 'box-shadow 0.3s ease-in-out',
+        height: '100%',
+        width: '100%', // Адаптивна ширина
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between'
+      }}
+    >
       <CardContent sx={{ flexGrow: 1 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Typography variant="h5" component="div">

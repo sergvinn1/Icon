@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Container, TextField, Grid, Box, Typography } from '@mui/material';
+import { Container, TextField, Grid, Box, Typography, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
@@ -22,11 +22,11 @@ const Search = () => {
 
     // Пошук за назвою
     if (name.length >= 3) {
-      const nameWords = name.toLowerCase().split(/\s+/).filter(word => word.length >= 3);
-      if (nameWords.length > 0) {
-        const nameQuery = query(iconsCollection, where('keywords', 'array-contains-any', nameWords));
+      const nameWords = name.toLowerCase().split(' ').filter(word => word.length >= 3);
+      nameWords.forEach(word => {
+        const nameQuery = query(iconsCollection, where('keywords', 'array-contains', word));
         queries.push(nameQuery);
-      }
+      });
     }
 
     // Пошук за номером
@@ -55,6 +55,14 @@ const Search = () => {
     handleSearch();
   }, [name, number, handleSearch]);
 
+  const handleEdit = (id) => {
+    navigate(`/edit/${id}`);
+  };
+
+  const handleDelete = (id) => {
+    console.log(`Delete icon with id ${id}`);
+  };
+
   return (
     <Container>
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, marginTop: 4 }}>
@@ -66,23 +74,44 @@ const Search = () => {
           variant="outlined"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          fullWidth
         />
         <TextField
           label="Номер"
           variant="outlined"
           value={number}
           onChange={(e) => setNumber(e.target.value)}
-          fullWidth
         />
-      </Box>
-      <Grid container spacing={2} marginTop={2}>
-        {results.map((icon) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={icon.id}>
-            <IconCard {...icon} onEdit={() => navigate(`/edit/${icon.id}`)} onDelete={() => {}} />
+        <Button variant="outlined" color="secondary" onClick={() => navigate('/')}>
+          Повернутися
+        </Button>
+        {results.length === 1 ? (
+          <Box sx={{ width: '100%' }}>
+            <IconCard
+              id={results[0].id}
+              name={results[0].name}
+              number={results[0].number}
+              cabinet={results[0].cabinet}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
+          </Box>
+        ) : (
+          <Grid container spacing={2}>
+            {results.map((icon) => (
+              <Grid item xs={12} sm={6} md={4} lg={3} key={icon.id}>
+                <IconCard
+                  id={icon.id}
+                  name={icon.name}
+                  number={icon.number}
+                  cabinet={icon.cabinet}
+                  onEdit={handleEdit}
+                  onDelete={handleDelete}
+                />
+              </Grid>
+            ))}
           </Grid>
-        ))}
-      </Grid>
+        )}
+      </Box>
     </Container>
   );
 };
