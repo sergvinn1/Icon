@@ -12,7 +12,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const Home = () => {
   const navigate = useNavigate();
   const [icons, setIcons] = useState([]);
-  const [allCollapsed, setAllCollapsed] = useState(false);
+  const [allCollapsed, setAllCollapsed] = useState(true); // Встановлюємо початкове значення на true
   const [sortType, setSortType] = useState('name');
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [currentIcon, setCurrentIcon] = useState({ id: '', name: '', number: '', cabinet: '' });
@@ -54,7 +54,7 @@ const Home = () => {
       await deleteDoc(doc(db, 'icons', id));
       setIcons(icons.filter(icon => icon.id !== id));
       toast.success('Ікону видалено успішно');
-    } catch (error) {
+    } catch {
       toast.error('Помилка при видаленні ікони');
     }
   };
@@ -73,7 +73,7 @@ const Home = () => {
       setIcons(icons.map(icon => (icon.id === currentIcon.id ? currentIcon : icon)));
       toast.success('Ікону оновлено успішно');
       setIsEditDialogOpen(false);
-    } catch (error) {
+    } catch {
       toast.error('Помилка при оновленні ікони');
     }
   };
@@ -109,7 +109,7 @@ const Home = () => {
             fullWidth={true}
             sx={{ maxWidth: { sm: 'auto' } }}
           >
-            Пошук іконок
+            Пошук ікон
           </Button>
           <Button
             variant="contained"
