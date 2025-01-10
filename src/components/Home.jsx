@@ -97,7 +97,7 @@ const Home = () => {
           WebkitTextFillColor: 'transparent',
         }}
       >
-        Пошук ікон
+        Ікони
       </Typography>
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, marginBottom: 3 }}>
         <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2, justifyContent: 'center', width: '100%' }}>

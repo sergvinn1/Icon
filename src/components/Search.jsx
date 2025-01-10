@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Container, TextField, Grid, Box, Typography, Button } from '@mui/material';
+import { Container, TextField, Grid, Box, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
@@ -81,9 +81,6 @@ const Search = () => {
           value={number}
           onChange={(e) => setNumber(e.target.value)}
         />
-        <Button variant="outlined" color="secondary" onClick={() => navigate('/')}>
-          Повернутися
-        </Button>
         {results.length === 1 ? (
           <Box sx={{ width: '100%' }}>
             <IconCard
