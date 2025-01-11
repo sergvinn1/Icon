@@ -5,11 +5,13 @@ import { generateKeywords } from '../generateKeywords'; // Імпортуємо 
 import { Container, TextField, Button, Box, Typography } from '@mui/material';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom'; // Імпортуємо useNavigate
 
 const AddIcon = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
   const [cabinet, setCabinet] = useState('');
+  const navigate = useNavigate(); // Використовуємо useNavigate
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,7 +24,9 @@ const AddIcon = () => {
         cabinet,
         keywords, // Додаємо ключові слова до документа
       });
-      toast.success('Ікону успішно додано!');
+      toast.success('Ікону успішно додано!', {
+        onClose: () => navigate('/') // Перенаправлення на головну сторінку після успішного додавання
+      });
       setName('');
       setNumber('');
       setCabinet('');
@@ -37,7 +41,7 @@ const AddIcon = () => {
       <ToastContainer />
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, marginTop: 4 }}>
         <Typography variant="h4" gutterBottom>
-          Додати ікону
+          Додати Ікону
         </Typography>
         <form onSubmit={handleSubmit} style={{ width: '100%' }}>
           <TextField
