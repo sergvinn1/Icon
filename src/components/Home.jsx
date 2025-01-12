@@ -14,7 +14,7 @@ const Home = () => {
   const navigate = useNavigate();
   const [icons, setIcons] = useState([]);
   const [allCollapsed, setAllCollapsed] = useState(true);
-  const [sortType, setSortType] = useState('number'); // Змінено на 'number'
+  const [sortType, setSortType] = useState('number');
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [currentIcon, setCurrentIcon] = useState({ id: '', name: '', number: '', cabinet: '' });
   const [showScroll, setShowScroll] = useState(false);
@@ -162,7 +162,7 @@ const Home = () => {
         </FormControl>
       </Box>
       <Collapse in={!allCollapsed}>
-        <Grid container spacing={3}>
+        <Grid container spacing={3} sx={{ marginBottom: '24px' }}>
           {sortIcons(icons, sortType).map((icon) => (
             <Grid item xs={12} sm={6} md={4} key={icon.id}>
               <Box sx={{ height: '100%' }}>
