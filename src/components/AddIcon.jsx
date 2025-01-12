@@ -41,7 +41,7 @@ const AddIcon = () => {
       <ToastContainer />
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, marginTop: 4 }}>
         <Typography variant="h4" gutterBottom>
-          Додати Ікону
+          Додати ікону
         </Typography>
         <form onSubmit={handleSubmit} style={{ width: '100%' }}>
           <TextField

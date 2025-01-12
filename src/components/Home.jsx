@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Button, Container, Typography, Box, Grid, Collapse, MenuItem, Select, FormControl, InputLabel, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { Button, Container, Typography, Box, Grid, Collapse, MenuItem, Select, FormControl, InputLabel, TextField, Dialog, DialogActions, DialogContent, DialogTitle, Fab } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { collection, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import IconCard from './IconCard';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -12,10 +13,11 @@ import 'react-toastify/dist/ReactToastify.css';
 const Home = () => {
   const navigate = useNavigate();
   const [icons, setIcons] = useState([]);
-  const [allCollapsed, setAllCollapsed] = useState(true); // Встановлюємо початкове значення на true
-  const [sortType, setSortType] = useState('name');
+  const [allCollapsed, setAllCollapsed] = useState(true);
+  const [sortType, setSortType] = useState('number'); // Змінено на 'number'
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [currentIcon, setCurrentIcon] = useState({ id: '', name: '', number: '', cabinet: '' });
+  const [showScroll, setShowScroll] = useState(false);
 
   useEffect(() => {
     const fetchIcons = async () => {
@@ -82,6 +84,25 @@ const Home = () => {
     setIsEditDialogOpen(false);
   };
 
+  const checkScrollTop = () => {
+    if (!showScroll && window.pageYOffset > 300) {
+      setShowScroll(true);
+    } else if (showScroll && window.pageYOffset <= 300) {
+      setShowScroll(false);
+    }
+  };
+
+  const scrollTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    window.addEventListener('scroll', checkScrollTop);
+    return () => {
+      window.removeEventListener('scroll', checkScrollTop);
+    };
+  }, [showScroll]);
+
   return (
     <Container>
       <ToastContainer />
@@ -128,7 +149,7 @@ const Home = () => {
             fullWidth={true}
             sx={{ maxWidth: { sm: 'auto' } }}
           >
-            {allCollapsed ? 'Розгорнути всі' : 'Згорнути всі'}
+            {allCollapsed ? 'Розгорнути' : 'Згорнути'}
           </Button>
         </Box>
         <FormControl fullWidth variant="filled">
@@ -198,6 +219,16 @@ const Home = () => {
           </Button>
         </DialogActions>
       </Dialog>
+      {showScroll && (
+        <Fab
+          color="primary"
+          aria-label="scroll back to top"
+          onClick={scrollTop}
+          sx={{ position: 'fixed', bottom: 16, right: 16 }}
+        >
+          <KeyboardArrowUpIcon />
+        </Fab>
+      )}
     </Container>
   );
 };
