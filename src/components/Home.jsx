@@ -104,7 +104,14 @@ const Home = () => {
   }, [showScroll]);
 
   return (
-    <Container>
+    <Container
+      sx={{
+        backgroundImage: 'url(https://example.com/your-background-image.jpg)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        minHeight: '100vh',
+      }}
+    >
       <ToastContainer />
       <Typography
         variant="h2"
