@@ -12,7 +12,7 @@ export default defineConfig({
   ],
   server: {
     middlewareMode: 'html',
-    setupMiddlewares: (middlewares, server) => {
+    setupMiddlewares: (middlewares) => {
       middlewares.use(history());
       return middlewares;
     },
